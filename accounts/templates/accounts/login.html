@@ -1,0 +1,49 @@
+{% extends "shop/base.html" %}
+{% block title %}Account{% endblock title %}
+
+{% block container %}
+
+<section id="form"><!--form-->
+  <div class="container">
+   <div class="row">
+    <div class="col-sm-4 col-sm-offset-1">
+
+     <div class="login-form"><!--login form-->
+      <h2>Login to your account</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+
+        {% for f in form %}
+          <div>
+            {{ f.name|capfirst }}
+            <br>
+            {{ f }}
+            <font color="#ff0000"> {{ f.errors }} </font>
+          </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        {% endif %}
+    <button type="submit" class="btn btn-default">Login</button>
+    </form>
+          <div>
+            New to E-SHOPPER? <a href="{% url "accounts:signup" %}">Sign up</a>
+          </div>
+
+          <br>
+  <p><strong>-- OR --</strong></p>
+  <a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br>
+
+     </div><!--/login form-->
+    </div>
+
+   </div>
+  </div>
+ </section><!--/form-->
+
+{% endblock container %}

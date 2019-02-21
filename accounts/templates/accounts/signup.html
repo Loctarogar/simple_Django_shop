@@ -1,0 +1,50 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Signup{% endblock title %}
+
+
+{% block container %}
+
+<section id="form"><!--form-->
+  <div class="container">
+   <div class="row">
+    <div class="col-sm-4 col-sm-offset-1">
+
+    <div class="signup-form">
+     <h2>New User Signup!</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+
+        {% for f in form %}
+          <div>
+            {{ f.name|capfirst }}
+            <br>
+            {{ f }}
+            <font color="#ff0000"> {{ f.errors }} </font>
+          </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        {% endif %}
+    <button type="submit" class="btn btn-default">Sign up</button>
+    </form>
+    <div>
+      Already have an account? <a href="{% url "accounts:login" %}">Log in</a>
+          </div>
+     </div><!--/sign up form-->
+    </div>
+
+   </div>
+  </div>
+ </section><!--/form-->
+
+
+{% endblock container %}
+
+
+</body>
+</html>

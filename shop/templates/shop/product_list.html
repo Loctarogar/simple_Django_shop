@@ -1,0 +1,167 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block container %}
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="left-sidebar">
+            <h2>Category</h2>
+            <div class="panel-group category-products" id="accordian"><!--category-productsr-->
+              <div class="panel panel-default">
+                <div class="panel-heading">
+              {% for c in categories %}
+              
+
+                  <h4 class="panel-title"><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></h4>
+              {% endfor %}
+                </div>
+              </div>
+
+            </div><!--/category-products-->
+
+
+            <div class="brands_products"><!--brands_products-->
+              <h2>Brands</h2>
+              <div class="brands-name">
+                <ul class="nav nav-pills nav-stacked">
+                  {% for c in brands %}
+                    <li><a href="{{ c.get_absolute_url }}"> <span class="pull-right"></span>{{ c.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div><!--/brands_products-->
+
+            <div class="price-range"><!--price-range-->
+              <h2>Price Range</h2>
+              <div class="well text-center">
+              <form action="" method="get">
+                {{ price_form.as_p }}
+                <input type="submit" value="Search" />
+              </form>
+              </div>
+            </div><!--/price-range-->
+
+            <div class="shipping text-center"><!--shipping-->
+              <img src="{% static "img/home/shipping.jpg" %}" alt="" />
+            </div><!--/shipping-->
+
+          </div>
+        </div>
+
+
+        <div class="col-sm-9 padding-right">
+
+          {% if products %}
+          <div class="features_items"><!--features_items-->
+            <h2 class="title text-center">{% if category %} {{ category.name }}
+                                          {% elif brand %} {{ brand.name }} {% endif %}</h2>
+
+            {% for item in products_list %}
+            <div class="col-sm-4">
+              <div class="product-image-wrapper">
+                <div class="single-products">
+                    <div class="productinfo text-center">
+                      <img src="{% if item.image %}{{ item.image.url }}{% else %}
+                                {% static "img/no_image.png" %}{% endif %}" height="150">
+                      <h2>${{ item.price }}</h2>
+                      <p><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></p>
+
+                      <a href="{{ item.get_absolute_url }}" class="btn btn-default add-to-cart">
+                      Go to the product page</a>
+                    </div>
+                </div>
+                <div class="choose">
+                  <ul class="nav nav-pills nav-justified">
+                    <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                    <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div class="well text-center">
+
+            {% endfor %}
+                      </div>
+        <div >
+            <div class="pagination">
+            <span class="step-links">
+            {% if products_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ products_list.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current">
+            Page {{ products_list.number }} of {{ products_list.paginator.num_pages }}.
+            </span>
+            {% if products_list.has_next %}
+            <a href="?page={{ products_list.next_page_number }}">next</a>
+            <a href="?page={{ products_list.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+            </span>
+            </div>
+
+          </div><!--features_items-->
+          {% endif %}
+
+
+     {% if recommended_item %}
+     <div class="recommended_items"><!--recommended_items-->
+      <h2 class="title text-center">recommended items</h2>
+      
+      <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+       <div class="carousel-inner">
+        <div class="item active"> 
+
+        {% for item in recommended_item|slice:":3" %}
+         <div class="col-sm-4">
+          <div class="product-image-wrapper">
+           <div class="single-products">
+            <div class="productinfo text-center">
+            <img src="{% if item.image %}{{ item.image.url }}{% else %}
+                      {% static "img/no_image.png" %}{% endif %}" height="150">
+             <h2>{{ item.price }}</h2>
+             <p>{{ item.name }}</p>
+             <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+            </div>
+           </div>
+          </div>
+         </div>
+        {% endfor %}
+        </div>
+        <div class="item"> 
+        {% for item in recommended_item|slice:"3:6" %}
+         <div class="col-sm-4">
+          <div class="product-image-wrapper">
+           <div class="single-products">
+            <div class="productinfo text-center">
+            <img src="{% if item.image %}{{ item.image.url }}{% else %}
+                      {% static "img/no_image.png" %}{% endif %}" height="150">
+             <h2>{{ item.price }}</h2>
+             <p>{{ item.name }}</p>
+             <button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
+            </div>
+           </div>
+          </div>
+         </div>
+        {% endfor %}
+        </div>
+        </div>
+         
+        <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+        <i class="fa fa-angle-left"></i>
+         </a>
+         <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+        <i class="fa fa-angle-right"></i>
+         </a>   
+      </div>
+     </div><!--/recommended_items-->
+     {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock container %}

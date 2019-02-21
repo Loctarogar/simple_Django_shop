@@ -1,0 +1,116 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block container %}
+
+ <section>
+  <div class="container">
+   <div class="row">
+    <div class="col-sm-3">
+     <div class="left-sidebar">
+      <div class="brands_products"><!--Tags-->
+       <h2>Tags</h2>
+       <div class="brands-name">
+        <ul class="nav nav-pills nav-stacked">
+
+        {% if tags|length > 0  %}
+        {% for tag in tags %}
+
+         <li><a href="{% url "blog:post_list_by_tag" tag.id %}">{{ tag.tag_name }}{{ tag.id }}</a></li>
+
+        {% endfor %}
+        {% endif %}
+
+        </ul>
+       </div>
+      </div><!--/Tags-->
+
+     </div>
+    </div>
+
+{% if post %}
+
+    <div class="col-sm-9">
+     <div class="blog-post-area">
+      <h2 class="title text-center">Single blog</h2>
+      <div class="single-blog-post">
+       <h3>{{ post.title }}</h3>
+       <div class="post-meta">
+        <ul>
+         <li><i class="fa fa-user"></i>{{ post.author }}</li>
+         <li><i class="fa fa-clock-o"></i>{{ post.publish }}</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="socials-share">
+      <a href=""><img src="images/blog/socials.png" alt=""></a>
+     </div><!--/socials-share-->
+
+     <p><img src="{% if post.image %}{{ post.image.url }}{% else %}
+     {% static "img/no_image.png" %}{% endif %}" height="300"></p>
+     <p> {{ post.body }}</p>
+
+    {% for tag in post.tag.all %}
+        <div class="fa fa-plus-square">
+        <a href="{% url "blog:post_list_by_tag" tag.id %}">{{ tag.tag_name }}</a>
+        </div>
+    {% endfor %}
+    <br>
+    {% with comments.count as total_comments %}
+      <h2>
+        {{ total_comments }} comment{{ total_comments|pluralize }}
+      </h2>
+    {% endwith %}
+
+
+      {% for comment in comments %}
+      <div class="blog-post-area">
+        <div class="post-meta">
+          <ul>
+            <li><i class="fa fa-user"></i>{{ comment.comment_author.username|capfirst }}</li>
+            <li><i class="fa fa-calendar-o"></i>{{ comment.created }}</li>
+        </div>
+      </div>
+          </ul>
+          {{ comment.body|linebreaks }}
+    {% empty %}
+      <p>There are no comments yet.</p>
+    {% endfor %}
+
+
+    {% if user.is_authenticated %}
+
+    {% if new_comment %}
+      <h2>Your comment has been added.</h2>
+    {% else %}
+      <h2>Add a new comment</h2>
+      <form action="." method="post">
+        {{ comment_form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Add comment"></p>
+      </form>
+    {% endif %}
+
+    <p>Login to liave comment</p>
+    {% endif %}
+    <div class="post-meta">
+    {% if not user.is_authenticated %}
+    <div class="title text-center"><p>Login to leave a comment</p></div>
+    {% endif %}
+
+    </div>
+    </div>
+    </div>
+    </div> 
+   </div>
+  </div>
+ </section>
+{% endif %}
+
+
+{% endblock container %}

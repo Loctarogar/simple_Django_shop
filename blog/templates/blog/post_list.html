@@ -1,0 +1,81 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block container %}
+
+ <section>
+  <div class="container">
+   <div class="row">
+    <div class="col-sm-3">
+     <div class="left-sidebar">
+      <div class="brands_products"><!--Tags-->
+       <h2>Tags</h2>
+       <div class="brands-name">
+        <ul class="nav nav-pills nav-stacked">
+
+        {% if tags|length > 0  %}
+        {% for tag in tags %}
+
+         <li><a href="{% url "blog:post_list_by_tag" tag.id %}">{{ tag.tag_name }}{{ tag.id }}</a></li>
+
+        {% endfor %}
+        {% endif %}
+
+        </ul>
+       </div>
+      </div><!--/Tags-->
+
+     </div>
+    </div>
+
+
+
+    <div class="col-sm-9">
+     <div class="blog-post-area">
+      <h2 class="title text-center">Latest From our Blog</h2>
+      {% if posts %}
+      {% for post in blog_list %}
+        <a href="{{ post.get_absolute_url }}">
+          {{ post.title }}
+        </a>
+        <p><img src="{% if post.image %}{{ post.image.url }}{% else %}
+                       {% static "img/no_image.png" %}{% endif %}" height="250"></p>
+
+        <p class="date">
+          Published {{ post.publish }} by {{ post.author }}
+        </p>
+          <div>{{ post.body|truncatewords:30|linebreaks }}</div>
+      {% endfor %}
+
+            <div class="pagination">
+            <span class="step-links">
+            {% if blog_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ blog_list.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="current">
+            Page {{ blog_list.number }} of {{ blog_list.paginator.num_pages }}.
+            </span>
+            {% if blog_list.has_next %}
+            <a href="?page={{ blog_list.next_page_number }}">next</a>
+            <a href="?page={{ blog_list.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+            </span>
+            </div>
+
+      {% endif %}
+
+     </div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+{% endblock container %}
+
+
+

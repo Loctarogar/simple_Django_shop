@@ -1,0 +1,78 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+<body>
+
+{% block slider %}
+{% endblock slider %}
+
+{% block container %}
+
+ <section id="cart_items">
+  <div class="container">
+   <div class="breadcrumbs">
+    <ol class="breadcrumb">
+      <li><a href="#">Home</a></li>
+      <li class="active">Shopping Cart</li>
+    </ol>
+   </div>
+   <div class="table-responsive cart_info">
+    <table class="table table-condensed">
+     <thead>
+      <tr class="cart_menu">
+       <td class="image">Item</td>
+       <td class="description"></td>
+       <td class="price">Price</td>
+       <td class="quantity">Quantity</td>
+       <td class="total">Total</td>
+       <td></td>
+      </tr>
+     </thead>
+     <tbody>
+     {% for item in cart %}
+       {% with product=item.product %}
+      <tr>
+       <td class="cart_product">
+        <a href="{{ product.get_absolute_url }}">
+            <img src="{% if product.image %}{{ product.image.url}}
+                {% else %}{% static "img/no_image.png" %} {% endif %}"
+        width=200 ></a>
+       </td>
+       <td class="cart_description">
+        <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+        <p>Web ID: {{ product.id }}</p>
+       </td>
+       <td class="cart_price">
+        <p>${{ product.price }}</p>
+       </td>
+       <td class="cart_quantity">
+
+         <form action="{% url "cart:cart_add" product.id %}" method="post">
+           {{ item.update_quantity_form.quantity }}
+           {{ item.update_quantity_form.update }}
+           <input type="submit" value="Update">
+           {% csrf_token %}
+         </form>
+
+       </td>
+       <td class="cart_total">
+        <p class="cart_total_price">${{ item.total_price }}</p>
+       </td>
+       <td class="cart_delete">
+        <a class="cart_quantity_delete" href="{% url "cart:cart_remove" product.id %}"><i class="fa fa-times"></i></a>
+       </td>
+      </tr>
+      {% endwith %}
+      {% endfor %}
+
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </section> <!--/#cart_items-->
+
+{% endblock container %}
+
+
+</body>
+</html>
